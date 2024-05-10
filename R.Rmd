@@ -1,0 +1,52 @@
+---
+title: "R"
+output:
+  html_document: default
+---
+
+download package ggplot2
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+import the data("iris")
+```{r}
+data("iris")
+```
+
+make a scatter plot with x-axis: Sepal.Length and y-axis: Sepal.Width, and the species should be shown in different colors
+```{r}
+print( p <- ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + geom_point() )
+```
+
+add regression line for the previous plot with the whole dataset (regardless of the species)
+```{r}
+p + geom_smooth(method="lm", se=FALSE, color="black") # reusing above plot
+```
+
+calculate the Pearson correlation for this plot
+```{r}
+cor.test(iris$Sepal.Length, iris$Sepal.Width, method="pearson")
+```
+
+make the boxplot for Petal.Width with 3 species separately in the x-axis in different colors
+```{r}
+ggplot(iris, aes(x=Species, y=Petal.Width, fill=Species)) + geom_boxplot()
+```
+
+make the histogram for Petal.Width with 3 species separately in x-axis in different colors
+```{r}
+ggplot(iris, aes(x=Petal.Width, fill=Species)) + geom_histogram()
+```
+
+run the t-test of Petal.Width between setosa and virginica, and give the conclusion if the width is a statistically significant difference between 2 species
+
+```{r}
+t_test <- t.test(
+  subset(iris, Species == "setosa")$Petal.Width,
+  subset(iris, Species == "virginica")$Petal.Width,
+)
+cat("Conclusion: The petal width between setosa and virginica is statistically", if(t_test$p.value > 0.05) "not", "significant.\n")
+```
